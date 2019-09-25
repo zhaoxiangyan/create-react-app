@@ -1,26 +1,39 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { connect } from 'react-redux';
+import Locale from '../src/locale'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+// 多语言国际化
+import { IntlProvider } from 'react-intl'
+
+// 引入路由
+import { BrowserRouter as Router, Switch, Route} from 'react-router-dom'
+
+// 引入全局页面
+import Page from '../src/views/page';
+import Home from '../src/views/home';
+
+
+const App = props => {
+    return (
+      <IntlProvider 
+      locale={props.lang}
+      messages={Locale[props.lang]}
+      >
+          <Router>
+              <Switch>
+                <Route path="/home" component={Home} />
+                <Route path="/" component={Page} />
+              </Switch>
+          </Router>
+      </IntlProvider>
+    );
 }
 
-export default App;
+
+const mapStateToProps = state => {
+  const {lang} = state.clientData;
+  return {lang};
+};
+
+
+export default connect(mapStateToProps)(App);
